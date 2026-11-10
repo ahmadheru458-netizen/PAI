@@ -1,0 +1,6 @@
+{
+  "name": "PAI-Waris Digital",
+  "description": "Aplikasi Web Interaktif Pembelajaran & Simulasi Perhitungan Pembagian Harta Waris Islam (Faraidh) untuk SMA/SMK",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
