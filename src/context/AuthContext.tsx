@@ -57,13 +57,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return [INITIAL_TEACHER, ...INITIAL_STUDENTS];
   });
 
+  // By default, currentUser is null so the login page appears whenever opening the application
   const [currentUser, setCurrentUser] = useState<User | null>(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
-    if (saved) {
-      try { return JSON.parse(saved); } catch (e) { /* ignore */ }
-    }
-    // Default to teacher for initial discovery or student 1
-    return INITIAL_TEACHER;
+    // Clean up any legacy auto-login data so the login screen always appears on link open
+    try {
+      localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+    } catch (e) { /* ignore */ }
+    return null;
   });
 
   const [materials, setMaterials] = useState<Material[]>(() => {

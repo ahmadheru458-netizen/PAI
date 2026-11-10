@@ -29,8 +29,8 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
   const { theme, toggleTheme } = useTheme();
 
   const [activeRoleTab, setActiveRoleTab] = useState<'siswa' | 'guru'>('siswa');
-  const [username, setUsername] = useState('ahmad_fauzi');
-  const [password, setPassword] = useState('123');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -39,13 +39,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
   const handleTabChange = (role: 'siswa' | 'guru') => {
     setActiveRoleTab(role);
     setError('');
-    if (role === 'guru') {
-      setUsername('guru_ahmad');
-      setPassword('guru123');
-    } else {
-      setUsername('ahmad_fauzi');
-      setPassword('123');
-    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -229,7 +222,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                   required
                   value={username}
                   onChange={e => setUsername(e.target.value)}
-                  placeholder={activeRoleTab === 'siswa' ? 'Masukkan username siswa...' : 'Masukkan username guru...'}
+                  placeholder={activeRoleTab === 'siswa' ? 'Masukkan username siswa (cth: ahmad_fauzi)' : 'Masukkan username guru (cth: guru_ahmad)'}
                   className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 font-medium transition-colors"
                 />
               </div>
