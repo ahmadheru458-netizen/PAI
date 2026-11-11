@@ -24,18 +24,19 @@ import { useToast } from '../../context/ToastContext';
 export const SimulasiTab: React.FC = () => {
   const { showToast } = useToast();
 
-  const [tirkahInput, setTirkahInput] = useState<number>(100000000); // 100 Juta default
+  const [tirkahInput, setTirkahInput] = useState<number>(0); // Diawali 0 saat awal buka
   const [pewarisGender, setPewarisGender] = useState<'laki' | 'perempuan'>('laki');
   const [showExtendedHeirs, setShowExtendedHeirs] = useState<boolean>(false);
   const [showSteps, setShowSteps] = useState<boolean>(true);
 
+  // Semua ahli waris diawali 0 / false saat awal buka
   const [heirState, setHeirState] = useState<HeirInput>({
     suami: 0,
-    istri: 1,
-    ayah: true,
-    ibu: true,
-    anakLaki: 1,
-    anakPerempuan: 1,
+    istri: 0,
+    ayah: false,
+    ibu: false,
+    anakLaki: 0,
+    anakPerempuan: 0,
     cucuLaki: 0,
     cucuPerempuan: 0,
     kakek: false,
@@ -45,36 +46,41 @@ export const SimulasiTab: React.FC = () => {
     saudaraSeibu: 0,
   });
 
-  const [result, setResult] = useState<CalculationResult | null>(() => {
-    return calculateFaraidh(100000000, {
-      suami: 0,
-      istri: 1,
-      ayah: true,
-      ibu: true,
-      anakLaki: 1,
-      anakPerempuan: 1,
-      cucuLaki: 0,
-      cucuPerempuan: 0,
-      kakek: false,
-      nenek: false,
-      saudaraLakiKandung: 0,
-      saudaraPerempuanKandung: 0,
-      saudaraSeibu: 0,
-    });
-  });
+  // Belum diklik hitung: result diawali null
+  const [result, setResult] = useState<CalculationResult | null>(null);
 
   const handleGenderChange = (gender: 'laki' | 'perempuan') => {
     setPewarisGender(gender);
     if (gender === 'laki') {
-      setHeirState(prev => ({ ...prev, suami: 0, istri: prev.istri > 0 ? prev.istri : 1 }));
+      setHeirState(prev => ({ ...prev, suami: 0 }));
     } else {
-      setHeirState(prev => ({ ...prev, istri: 0, suami: 1 }));
+      setHeirState(prev => ({ ...prev, istri: 0 }));
     }
   };
 
   const handleCalculate = () => {
     if (tirkahInput <= 0) {
-      showToast('error', 'Harta Tidak Valid', 'Masukkan nominal harta waris lebih dari 0.');
+      showToast('warning', 'Harta Waris Nol', 'Silakan masukkan nominal harta waris (Tirkah) lebih dari Rp 0.');
+      return;
+    }
+
+    const hasAnyHeir =
+      heirState.suami > 0 ||
+      heirState.istri > 0 ||
+      heirState.ayah ||
+      heirState.ibu ||
+      heirState.anakLaki > 0 ||
+      heirState.anakPerempuan > 0 ||
+      heirState.cucuLaki > 0 ||
+      heirState.cucuPerempuan > 0 ||
+      heirState.kakek ||
+      heirState.nenek ||
+      heirState.saudaraLakiKandung > 0 ||
+      heirState.saudaraPerempuanKandung > 0 ||
+      heirState.saudaraSeibu > 0;
+
+    if (!hasAnyHeir) {
+      showToast('warning', 'Ahli Waris Belum Dipilih', 'Pilih minimal satu ahli waris yang ditinggalkan.');
       return;
     }
 
@@ -84,15 +90,15 @@ export const SimulasiTab: React.FC = () => {
   };
 
   const handleReset = () => {
-    setTirkahInput(100000000);
+    setTirkahInput(0);
     setPewarisGender('laki');
     setHeirState({
       suami: 0,
-      istri: 1,
-      ayah: true,
-      ibu: true,
-      anakLaki: 1,
-      anakPerempuan: 1,
+      istri: 0,
+      ayah: false,
+      ibu: false,
+      anakLaki: 0,
+      anakPerempuan: 0,
       cucuLaki: 0,
       cucuPerempuan: 0,
       kakek: false,
@@ -103,7 +109,7 @@ export const SimulasiTab: React.FC = () => {
     });
     setResult(null);
     setShowExtendedHeirs(false);
-    showToast('info', 'Formulir Direset', 'Semua isian telah dikembalikan ke awal.');
+    showToast('info', 'Formulir Direset', 'Semua isian telah dikembalikan ke angka nol.');
   };
 
   // Count active extended heirs for badge
